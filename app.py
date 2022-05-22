@@ -10,21 +10,32 @@
 
 from classifier import bart_classifier as bc
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 from  ner import bert_ner as bn
 from pydantic import BaseModel
-
-class BartClassifier(BaseModel):
-    class_label: str
-
-class Topic(BaseModel):
-    class_label: str
-    class_probability: float
-
-class Topics(BaseModel):
-    topics: list(Topic)
 
 class Document(BaseModel):
     document: str
 
+class Topics(BaseModel):
+    document: str
+    topics: list
+
 app = FastAPI()
 
+@app.post("/classify")
+async def classify_document(document: Document):
+    classes = bc.classify_document(document.document)
+    return { 'label': bc.get_class(classes) }
+
+@app.post("/topics")
+async def topic_generator(topics: Topics):
+    classes =  bc.classify_document(topics.document, topics.topics)
+    return bc.get_top_classes(classes)
+
+@app.post("/entities")
+async def get_entites(document: Document):
+    entity_dict = bn.get_entities(document.document)
+    
+    return bn.gather_entities(entity_dict=entity_dict)

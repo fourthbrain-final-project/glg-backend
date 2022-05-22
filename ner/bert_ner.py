@@ -31,7 +31,7 @@ def get_entities(document: str) -> list:
         : list
             list of dicts that has tagged entities
     """
-    return ner_pipeline(document)
+    return ner_pipeline(inputs=document)
 
 
 def gather_entities(entity_dict: list) -> list:
@@ -48,5 +48,4 @@ def gather_entities(entity_dict: list) -> list:
         : list
             list of strings that contain the entities that were found in the document                
     """
-    return list(map(lambda t: t.get('word'), entity_dict))
-
+    return {"entities": list(map(lambda t: t.get('word'), entity_dict))}

@@ -9,6 +9,7 @@
     
 """
 
+from cProfile import label
 from transformers import pipeline
 
 # possible classes are a constant
@@ -45,3 +46,19 @@ def get_class(bart_otuput: dict) -> str:
             return bart_otuput.get('labels')
     else:
         return ''
+
+
+def get_top_classes(label_dict: dict, top_n: int = 5):
+    if "labels" in label_dict and "scores" in label_dict:
+        if len(label_dict["labels"]) < top_n:
+            return {"labels": label_dict["labels"], "scores": label_dict["scores"]}
+        else:
+            labels = []
+            scores = []
+            for i in range(0, top_n):
+                labels.append(label_dict["labels"][i])
+                scores.append(label_dict["scores"][i])
+            
+            return {"labels": labels, "scores": scores}
+    else:
+        return {"labels": [], "scores": []}
