@@ -15,12 +15,70 @@ from fastapi.encoders import jsonable_encoder
 from  ner import bert_ner as bn
 from pydantic import BaseModel
 
+TOPICS = {
+    'health': 
+    [
+        'cardiac',
+        'joint',
+        'muscle',
+        'brain',
+        'vision',
+        'immune',
+        'urinary',
+        'respiratory',
+        'dental',
+        'ear',
+        'nose',
+        'throat',
+        'skin',
+        'genetics',
+        'cancers',
+        'diabetes',
+        'infections',
+        'pregnancy'
+    ],
+    'technology': 
+    [
+        'artificial intelligence',
+        'cloud computing',
+        'data',
+        'networking',
+        'video',
+        'audio',
+        'visualization',
+        'biometrics',
+        'distributed systems',
+        'cybersecurity',
+        'internet of things',
+        'mobile',
+        'privacy',
+        'usability',
+        'virtual reality',
+        'blockchain'
+    ],
+    'other': 
+    [
+        'sports',
+        'news',
+        'politics',
+        'economics',
+        'business',
+        'science',
+        'music',
+        'climate',
+        'art',
+        'culture',
+        'entertainment',
+        'celebrities'
+    ]
+}
+
 class Document(BaseModel):
     document: str
 
 class Topics(BaseModel):
     document: str
-    topics: list
+    topic: str
 
 app = FastAPI()
 
@@ -31,7 +89,11 @@ async def classify_document(document: Document):
 
 @app.post("/topics")
 async def topic_generator(topics: Topics):
-    classes =  bc.classify_document(topics.document, topics.topics)
+    if topics.topic in TOPICS:
+        classes =  bc.classify_document(topics.document, TOPICS[topics.topic])
+    else:
+        classes = bc.classify_document(topics.document, TOPICS['other'])
+    
     return bc.get_top_classes(classes)
 
 @app.post("/entities")
