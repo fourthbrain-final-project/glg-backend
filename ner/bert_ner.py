@@ -12,8 +12,8 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 from transformers import pipeline
 
 # tokenizers and classifiers to feed into pipeline from config files saved locally
-ner_tokenizer = AutoTokenizer.from_pretrained("./models/ner/")
-ner_classifier = AutoModelForTokenClassification.from_pretrained("./models/ner/")
+ner_tokenizer = AutoTokenizer.from_pretrained("/data/glg-backend/models/ner/")
+ner_classifier = AutoModelForTokenClassification.from_pretrained("/data/glg-backend/models/ner/")
 
 ner_pipeline = pipeline("ner", model=ner_classifier, tokenizer=ner_tokenizer)
 

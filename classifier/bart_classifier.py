@@ -16,7 +16,7 @@ from transformers import pipeline
 POSSIBLE_CLASSES = ['health', 'technology', 'other']
 
 # loading the classifier into memory to cache it
-classifier = pipeline('zero-shot-classification', model='./models/classify')
+classifier = pipeline('zero-shot-classification', model='/data/glg-backend/models/classify')
 
 
 def classify_document(submitted_doc: str, classes: list = POSSIBLE_CLASSES) -> list:
