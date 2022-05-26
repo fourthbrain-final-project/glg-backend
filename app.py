@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from  ner import bert_ner as bn
 from pydantic import BaseModel
+import uvicorn
 
 TOPICS = {
     'health': 
@@ -101,3 +102,7 @@ async def get_entites(document: Document):
     entity_dict = bn.get_entities(document.document)
     
     return bn.gather_entities(entity_dict=entity_dict)
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
